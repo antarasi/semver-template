@@ -19,8 +19,10 @@ namespace SemverTemplate
 
             var semVer = new SemVer(version);
 
-            using (StreamReader reader = new StreamReader(inputPath))
+            using (StreamReader reader = new StreamReader(inputPath, Encoding.Default, true)) // detect encoding from BOM
             {
+                var encoding = reader.CurrentEncoding;
+
                 string lines = reader.ReadToEnd();
                 var output = semVer.replaceInTemplate(lines);
 
@@ -33,7 +35,7 @@ namespace SemverTemplate
                     Console.WriteLine("Output file exists and will be overwritten!");
                 }
 
-                using (StreamWriter writer = new StreamWriter(outputPath))
+                using (StreamWriter writer = new StreamWriter(outputPath, false, encoding)) // don't append
                 {
                     writer.Write(output);
                 }
